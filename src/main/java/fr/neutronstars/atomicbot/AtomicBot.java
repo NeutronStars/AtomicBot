@@ -1,8 +1,10 @@
 package fr.neutronstars.atomicbot;
 
+import fr.neutronstars.atomicbot.command.CommandManager;
 import fr.neutronstars.atomicbot.json.JSONReader;
 import fr.neutronstars.atomicbot.json.JSONWriter;
 import fr.neutronstars.atomicbot.listener.AtomicListener;
+import fr.neutronstars.atomicbot.reaction.ReactionManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -74,6 +76,9 @@ public class AtomicBot
         }
 
         try {
+            CommandManager.get();
+            ReactionManager.get();
+
             JSONObject object = new JSONReader(file).toJSONObject();
             atomicBot = new AtomicBot(object.getString("token"));
         }catch (Exception e)
