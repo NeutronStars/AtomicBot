@@ -47,6 +47,8 @@ public class AtomicBot
             }
         }
 
+        ChannelManager.get().reset();
+
         jda.shutdown();
         scanner.close();
 

@@ -24,7 +24,11 @@ public class ChannelManager implements Runnable
 
     public void updateChannel(long id)
     {
-        if(channelMap.containsKey(id)) channelMap.get(id).lastTime = System.currentTimeMillis();
+        if(channelMap.containsKey(id))
+        {
+            channelMap.get(id).lastTime = System.currentTimeMillis();
+            channelMap.get(id).info = false;
+        }
     }
 
     public List<ChannelInfo> getChannelsInfo()
@@ -40,7 +44,11 @@ public class ChannelManager implements Runnable
 
     public void delete(long id)
     {
-        if(channelMap.containsKey(id)) delete(channelMap.get(id));
+        if(channelMap.containsKey(id))
+        {
+            delete(channelMap.get(id));
+            channelMap.remove(id);
+        }
     }
 
     public void addChannel(long textChannel, long voiceChannelId, long roleId, long userId, long helperId)
@@ -67,8 +75,20 @@ public class ChannelManager implements Runnable
         {
             long time = System.currentTimeMillis();
 
-            for(ChannelInfo channelInfo : getChannelsInfo())
-                if((time - channelInfo.lastTime)/1000 >= 1800) delete(channelInfo);
+            for(ChannelInfo channelInfo : getChannelsInfo()){
+                long currentTime = (time - channelInfo.lastTime)/1000;
+
+                if(currentTime >= 1740 && !channelInfo.info)
+                {
+                    AtomicBot.get().getJda().getTextChannelById(channelInfo.textChannelId).sendMessage("Le channel se supprimera dans 1 minute pour inactivité.").queue();
+                    channelInfo.info = true;
+                }
+                else if(currentTime >= 1800)
+                {
+                    delete(channelInfo);
+                    channelMap.remove(channelInfo.textChannelId);
+                }
+            }
 
             try {
                 Thread.sleep(10000);
@@ -95,6 +115,8 @@ public class ChannelManager implements Runnable
     {
         private final long textChannelId, voiceChannelId, roleId, userid, helperId;
         private long lastTime;
+
+        private boolean info;
 
         private ChannelInfo(long textChannelId, long voiceChannelId, long roleId, long userid, long helperId)
         {

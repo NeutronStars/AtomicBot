@@ -17,24 +17,23 @@ public class HelpRequestCommand implements Command
 
         if(args.length < 3)
         {
-            message.getAuthor().openPrivateChannel().complete().sendMessage("```?aide <Langage> <Librairies> <Problemes>```").queue();
+            message.getAuthor().openPrivateChannel().complete().sendMessage("```?aide <Langage> <Librairie> <Problème>```").queue();
             return true;
         }
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(message.getAuthor().getName(), null, message.getAuthor().getAvatarUrl());
-        builder.addField("Language", args[0], false);
-        builder.addField("Library", args[1], false);
+        builder.addField("Langage", args[0], false);
+        builder.addField("Librairie", args[1], false);
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 2; i < args.length; i++)
         {
-            if(i > 2) stringBuilder.append(", ");
+            if(i > 2) stringBuilder.append(" ");
             stringBuilder.append(args[i]);
         }
-        builder.addField("Problem", stringBuilder.toString(), false);
+        builder.addField("Problème", stringBuilder.toString(), false);
         builder.setColor(Color.magenta);
-        builder.setFooter("✅ Accepter d'aider cette personne.", null);
-        builder.setFooter("❌ Supprimer votre demande.", null);
+        builder.setFooter("✅ Accepter d'aider cette personne. - ❌ Supprimer votre demande.", null);
 
         MessageBuilder messageBuilder = new MessageBuilder();
         messageBuilder.append(message.getAuthor().getAsMention()+" a demandé de l'aide.");

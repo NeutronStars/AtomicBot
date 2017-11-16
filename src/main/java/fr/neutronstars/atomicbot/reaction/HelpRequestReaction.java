@@ -18,7 +18,7 @@ public class HelpRequestReaction implements IReaction
         switch (emote.getName())
         {
             case "✅":
-                if(!message.getAuthor().equals(user) && message.getEmbeds().size() > 0 && message.getMentionedUsers().size() > 0)
+                if(message.getEmbeds().size() > 0 && message.getMentionedUsers().size() > 0 && !message.getMentionedUsers().get(0).equals(user))
                 {
                     MessageEmbed embed = message.getEmbeds().get(0);
                     User target = message.getMentionedUsers().get(0);
@@ -46,7 +46,7 @@ public class HelpRequestReaction implements IReaction
                 }
                 break;
             case "❌":
-                if(message.getAuthor().equals(user))
+                if(message.getEmbeds().size() > 0 && message.getMentionedUsers().size() > 0 && message.getMentionedUsers().get(0).equals(user))
                 {
                     message.delete().queue();
                     break;
