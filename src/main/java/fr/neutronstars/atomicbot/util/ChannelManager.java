@@ -45,10 +45,8 @@ public class ChannelManager implements Runnable
     public void delete(long id)
     {
         if(channelMap.containsKey(id))
-        {
             delete(channelMap.get(id));
-            channelMap.remove(id);
-        }
+
     }
 
     public void addChannel(long textChannel, long voiceChannelId, long roleId, long userId, long helperId)
@@ -67,6 +65,8 @@ public class ChannelManager implements Runnable
         jda.getTextChannelById(channelInfo.textChannelId).delete().queue();
         jda.getVoiceChannelById(channelInfo.voiceChannelId).delete().queue();
         jda.getRoleById(channelInfo.roleId).delete();
+
+        channelMap.remove(channelInfo.textChannelId);
     }
 
     public void run()
@@ -83,11 +83,7 @@ public class ChannelManager implements Runnable
                     AtomicBot.get().getJda().getTextChannelById(channelInfo.textChannelId).sendMessage("Le channel se supprimera dans 1 minute pour inactivité.").queue();
                     channelInfo.info = true;
                 }
-                else if(currentTime >= 1800)
-                {
-                    delete(channelInfo);
-                    channelMap.remove(channelInfo.textChannelId);
-                }
+                else if(currentTime >= 1800) delete(channelInfo);
             }
 
             try {
