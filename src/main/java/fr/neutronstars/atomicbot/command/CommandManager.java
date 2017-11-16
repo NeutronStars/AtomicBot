@@ -12,7 +12,8 @@ public class CommandManager
     private final Map<String, Command> commandMap = new HashMap<>();
 
     static {
-
+        registerCommand("aide", new HelpRequestCommand());
+        registerCommand("end", new EndCommand());
     }
 
     private CommandManager(){}
@@ -22,10 +23,9 @@ public class CommandManager
         return commandMap.containsKey(name);
     }
 
-    public void executeCommand(Message message, String name, String[] args)
+    public boolean executeCommand(Message message, String name, String[] args)
     {
-        if(!hasCommand(name)) return;
-        commandMap.get(name).onCommand(message, name, args);
+        return hasCommand(name) && commandMap.get(name).onCommand(message, name, args);
     }
 
     public static CommandManager get()
